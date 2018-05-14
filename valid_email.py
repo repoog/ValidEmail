@@ -6,8 +6,9 @@ try:
     import DNS
     ServerError = DNS.ServerError
     DNS.DiscoverNameServers()
-except (ImportError, AttributeError):
-    DNS = None
+except (ImportError, AttributeError, ModuleNotFoundError):
+    print('ERROR: You need to install python3-dns.')
+    exit()
 
     class ServerError(Exception):
         pass
@@ -91,8 +92,6 @@ def validate_email(email, smtp_timeout=10):
     """
     try:
         assert re.match(VALID_ADDRESS_REGEXP, email) is not None
-        if not DNS:
-            raise Exception('For check the mx records or check if the email exists you must have installed pyDNS python package')
         hostname = email[email.find('@') + 1:]
         mx_hosts = get_mx_ip(hostname)
         if mx_hosts is None:
